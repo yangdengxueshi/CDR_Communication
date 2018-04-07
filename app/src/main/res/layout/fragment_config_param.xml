@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context="com.dexin.cdr_communication.fragment.ConfigParamFragment"
+    tools:ignore="HardcodedText">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:maxLines="1"
+            android:text="射频频率:"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/main_text_size"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3.5">
+
+            <AutoCompleteTextView
+                android:id="@+id/actv_radio_freq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="频率(50.0~180.0)"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/main_text_size"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+            android:text=" MHz"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/main_text_size"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:maxLines="1"
+            android:text="@string/transmission_mode"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/main_text_size"/>
+
+        <Spinner
+            android:id="@+id/s_transmission_mode"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="4"
+            android:entries="@array/transmission_mode"
+            android:prompt="@string/transmission_mode"
+            android:textAlignment="textEnd"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:maxLines="1"
+            android:text="@string/spectrum_mode"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/main_text_size"/>
+
+        <Spinner
+            android:id="@+id/s_spectrum_mode"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="4"
+            android:entries="@array/spectrum_mode"
+            android:prompt="@string/spectrum_mode"
+            android:textAlignment="textEnd"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_send_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/ic_send_msg"
+        android:text="设置"/>
+</LinearLayout>

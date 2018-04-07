@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    传输模式    -->
+    <string-array name="transmission_mode">
+        <item>@string/please_select</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <!--    频谱模式    -->
+    <string-array name="spectrum_mode">
+        <item>@string/please_select</item>
+        <item>1</item>
+        <item>2</item>
+        <item>9</item>
+        <item>10</item>
+        <item>22</item>
+        <item>23</item>
+    </string-array>
+
+    <!--    星座图输出类型    -->
+    <string-array name="constellation_diagram_output_mode">
+        <item>@string/please_select</item>
+        <item>全部子载波</item>
+        <item>导频</item>
+        <item>系统信息</item>
+        <item>SDIS</item>
+        <item>MSDS</item>
+    </string-array>
+</resources>

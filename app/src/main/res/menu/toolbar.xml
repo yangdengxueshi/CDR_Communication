@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/item_connect"
+        android:icon="@drawable/ic_connect_server"
+        android:title="连接"
+        app:showAsAction="ifRoom"/>
+
+    <group
+        android:id="@+id/group_constellation_diagram_type"
+        android:checkableBehavior="single"
+        android:enabled="true">
+        <item
+            android:enabled="false"
+            android:title="星座图输出类型："
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/item_all_subcarriers"
+            android:title="全部子载波"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/item_pilot"
+            android:title="导频"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/item_system_info"
+            android:title="系统信息"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/item_sdis"
+            android:title="SDIS"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/item_msds"
+            android:title="MSDS"
+            app:showAsAction="never"/>
+    </group>
+</menu>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CDR接收仪</string>
+    <string name="config_param">参数设置</string>
+    <string name="constellation_diagram">星座图</string>
+    <string name="data_area_error">数据范围错误</string>
+
+
+    <!--    Spinner相关    -->
+    <string name="please_select">请选择：</string>
+    <string name="transmission_mode">传输模式：</string>
+    <string name="spectrum_mode">频谱模式：</string>
+</resources>
