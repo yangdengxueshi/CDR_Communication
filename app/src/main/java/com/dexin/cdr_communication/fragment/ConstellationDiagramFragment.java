@@ -31,14 +31,12 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.vondear.rxtools.RxRegTool;
 import com.vondear.rxtools.view.RxToast;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -145,6 +143,8 @@ public class ConstellationDiagramFragment extends BaseFragment {
 //                    rightYAxis.setTypeface();
                 }
             }
+            mScConstellationDiagram.setData(new ScatterData());
+            mScConstellationDiagram.invalidate();
             dynamicAdjustLimitLine();
         }
         initLocalReceiverInOnActivityCreated();
@@ -249,8 +249,8 @@ public class ConstellationDiagramFragment extends BaseFragment {
         mTvFreqOffsetEstimationValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_FREQ_OFFSET_VALUE));
         mTvClockDeviationValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CLK_OFFSET_VALUE));
         mTvServiceDataModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MSC_QAM_VALUE));
-//        mTvBerValue
-//        mTvSubfMode
+        mTvBerValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE));
+        mTvSubfMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE));
         mTvInfoModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE));
         mTvLdpcCodeRate.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE));
     }
@@ -283,22 +283,9 @@ public class ConstellationDiagramFragment extends BaseFragment {
         mIntentFilter = null;
     }
 
-    private int i = 0;
-
-    @OnClick(R.id.tv_service_data_modulation_mode)
-    public void onClick() {
-        Intent mSendConstellationDiagramIntent = new Intent(AppConfig.ACTION_SHOW_RECEIVED_PARAM);
-        String[] mscQamArr = {"1", "2", "3"};
-
-
-        mSendConstellationDiagramIntent.putExtra(AppConfig.KEY_RECEIVED_DATA, MessageFormat.format("msc_qam={0}", mscQamArr[i % mscQamArr.length]));
-        AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConstellationDiagramIntent);
-
-        i++;
-    }
-
     private class LocalReceiver extends BroadcastReceiver {
         private String mLastParamReceiveStr;
+        private List<String> mScattValueList = new ArrayList<>();
         private List<Entry> mEntryList = new ArrayList<>();
 
         @Override
@@ -316,47 +303,65 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                 String[] lKeyValueGroup = lKeyValueStr.split("=");
                                 switch (lKeyValueGroup[0]) {
                                     case "scatt":
-                                        if (TextUtils.isEmpty(lKeyValueGroup[1]) || (lKeyValueGroup[1].length() % 4 != 0) || !RxRegTool.isMatch("^[A-Fa-f0-9]+$", lKeyValueGroup[1])) {
-                                            RxToast.warning("星座数据格式非法");
-                                            break;
-                                        }
-                                        if (mScConstellationDiagram.getVisibility() == View.GONE) mScConstellationDiagram.setVisibility(View.VISIBLE);
+                                        String scattValueStr = lKeyValueGroup[1];
+                                        if (mScattValueList.size() > 10) mScattValueList.remove(0);
+                                        if (!mScattValueList.contains(scattValueStr)) {
+                                            mScattValueList.add(scattValueStr);
+                                            if (TextUtils.isEmpty(scattValueStr) || (scattValueStr.length() % 4 != 0) || !RxRegTool.isMatch("^[A-Fa-f0-9]+$", scattValueStr)) {
+                                                RxToast.warning("星座数据格式非法");
+                                                break;
+                                            }
 
-                                        int tempInt, parseXInt, parseYInt;
-                                        for (int i = 0; i + 3 < lKeyValueGroup[1].length(); i = i + 4) {
-                                            tempInt = Integer.parseInt(lKeyValueGroup[1].substring(i, i + 2), 16);
-                                            parseXInt = (tempInt > 128) ? (tempInt - 256) : tempInt;
-                                            tempInt = Integer.parseInt(lKeyValueGroup[1].substring(i + 2, i + 4), 16);
-                                            parseYInt = (tempInt > 128) ? (tempInt - 256) : tempInt;
-                                            if (mEntryList.size() > 100 * 100) mEntryList.remove(0);//根据条件移除队首元素
-                                            mEntryList.add(new Entry(parseXInt, parseYInt));//TODO 一定要进行旧数据的移除
-                                        }
+                                            int tempInt, parseXInt, parseYInt;
+                                            for (int i = 0; i + 3 < scattValueStr.length(); i = i + 4) {
+                                                tempInt = Integer.parseInt(scattValueStr.substring(i, i + 2), 16);
+                                                parseXInt = (tempInt > 128) ? (tempInt - 256) : tempInt;
+                                                tempInt = Integer.parseInt(scattValueStr.substring(i + 2, i + 4), 16);
+                                                parseYInt = (tempInt > 128) ? (tempInt - 256) : tempInt;
+                                                if (mEntryList.size() > 100 * 100) mEntryList.remove(0);//TODO 一定要进行旧数据的移除,根据条件移除队首元素
+                                                mEntryList.add(new Entry(parseXInt, parseYInt));
+                                            }
 
-                                        ScatterDataSet lScatterDataSet = new ScatterDataSet(mEntryList, "");//创建一个 DataSet 并给它一个 type
-                                        lScatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
-                                        lScatterDataSet.setColor(ColorTemplate.COLORFUL_COLORS[0]);
-                                        lScatterDataSet.setScatterShapeSize(4F);
-                                        ScatterData mScatterData = new ScatterData(lScatterDataSet);
-                                        mScConstellationDiagram.setData(mScatterData);
-                                        mScConstellationDiagram.invalidate();
+                                            ScatterDataSet lScatterDataSet = new ScatterDataSet(mEntryList, "");//创建一个 DataSet 并给它一个 type
+                                            lScatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+                                            lScatterDataSet.setColor(ColorTemplate.COLORFUL_COLORS[0]);
+                                            lScatterDataSet.setScatterShapeSize(4F);
+                                            ScatterData mScatterData = new ScatterData(lScatterDataSet);
+                                            mScConstellationDiagram.setData(mScatterData);
+                                            mScConstellationDiagram.invalidate();
+                                        }
                                         break;
                                     case "syn_state":
-                                        mRbSyncStatus.setChecked(Objects.equals(lKeyValueGroup[1], "1"));
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_SYNC_STATE_VALUE, Objects.equals(lKeyValueGroup[1], "1"));
+                                        boolean synStateValue = Objects.equals(lKeyValueGroup[1], "1");
+                                        if (synStateValue != ApplicationUtility.getSPUtils().getBoolean(AppConfig.KEY_SYNC_STATE_VALUE)) {
+                                            mRbSyncStatus.setChecked(synStateValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_SYNC_STATE_VALUE, synStateValue);
+                                        }
                                         break;
                                     case "rf_power":
-                                        mTvRadioPower.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ_VALUE, lKeyValueGroup[1]);
+                                        String rfPowerValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(rfPowerValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_RADIO_FREQ_VALUE))) {
+                                            mTvRadioPower.setText(rfPowerValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ_VALUE, rfPowerValue);
+                                        }
                                         break;
                                     case "cnr":
-                                        mTvCnrValue.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_CNR_VALUE, lKeyValueGroup[1]);
+                                        String cnrValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(cnrValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CNR_VALUE))) {
+                                            mTvCnrValue.setText(cnrValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CNR_VALUE, cnrValue);
+                                        }
                                         break;
                                     case "mer":
-                                        mTvMerValue.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_MER_VALUE, lKeyValueGroup[1]);
+                                        String merValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(merValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MER_VALUE))) {
+                                            mTvMerValue.setText(merValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_MER_VALUE, merValue);
+                                        }
                                         break;
                                     case "freq_offset":
+
+
                                         if (RxRegTool.isMatch("^(-?\\d+)(\\.\\d+)?$", lKeyValueGroup[1])) {
                                             String freqOffsetValue = String.valueOf(Float.parseFloat(lKeyValueGroup[1]) / 1000);
                                             mTvFreqOffsetEstimationValue.setText(freqOffsetValue);
@@ -367,8 +372,11 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                         }
                                         break;
                                     case "clk_offset":
-                                        mTvClockDeviationValue.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_CLK_OFFSET_VALUE, lKeyValueGroup[1]);
+                                        String clkOffsetValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(clkOffsetValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CLK_OFFSET_VALUE))) {
+                                            mTvClockDeviationValue.setText(clkOffsetValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CLK_OFFSET_VALUE, clkOffsetValue);
+                                        }
                                         break;
                                     case "msc_qam":
                                         String mscQamValue = lKeyValueGroup[1];
@@ -405,8 +413,10 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                                 break;
                                             default:
                                         }
-                                        mTvInfoModulationMode.setText(cicQamValue);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_CIC_QAM_VALUE, cicQamValue);
+                                        if (!Objects.equals(cicQamValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE))) {
+                                            mTvInfoModulationMode.setText(cicQamValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CIC_QAM_VALUE, cicQamValue);
+                                        }
                                         break;
                                     case "ldpc_cr":
                                         String ldpcCrValue = lKeyValueGroup[1];
@@ -425,13 +435,24 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                                 break;
                                             default:
                                         }
-                                        mTvLdpcCodeRate.setText(ldpcCrValue);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_LDPC_CR_VALUE, ldpcCrValue);
-                                    case "BER":
-                                        mTvBerValue.setText(lKeyValueGroup[1]);
+                                        if (!Objects.equals(ldpcCrValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE))) {
+                                            mTvLdpcCodeRate.setText(ldpcCrValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_LDPC_CR_VALUE, ldpcCrValue);
+                                        }
                                         break;
-                                    case "subf_mode"://子帧分配方式
-                                        mTvSubfMode.setText(lKeyValueGroup[1]);
+                                    case "BER":
+                                        String BERValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(BERValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE))) {
+                                            mTvBerValue.setText(BERValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_BER_VALUE, BERValue);
+                                        }
+                                        break;
+                                    case "subf_mode"://子帧分配方式:
+                                        String subfModeValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(subfModeValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE))) {
+                                            mTvSubfMode.setText(subfModeValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_SUBF_MODE_VALUE, subfModeValue);
+                                        }
                                         break;
                                     default:
                                 }

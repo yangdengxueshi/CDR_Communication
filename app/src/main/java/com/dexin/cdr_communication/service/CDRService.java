@@ -40,7 +40,7 @@ public class CDRService extends BaseService {
     public IBinder onBind(Intent intent) {
         connectToCDRServer();//FIXME 一启动就去连接一下服务器
 
-        sendTimerDataBroadcastInOnBind();
+//        sendTimerDataBroadcastInOnBind();
         initLocalReceiverResourceInOnBind();
         return mCDRBinder;
     }
@@ -172,6 +172,13 @@ public class CDRService extends BaseService {
 //                    AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendHeartbeatIntent);
 //                    HANDLER.postDelayed(this, 5L * 1000L);
 //                }
+
+//                {//向自己发送数据          "syn_state=1&rf_power=2164646444546&cnr=35646444566&mer=164686456688&freq_offset=53558646646&clk_offset=5215349498&msc_qam=108000000123456&cic_qam=20165644988&ldpc_cr=10164468635\n"
+//                    mSendConstellationDiagramIntent.putExtra(AppConfig.KEY_RECEIVED_DATA, "syn_state=1&rf_power=2164646444546&cnr=35646444566&mer=164686456688&freq_offset=53558646646&clk_offset=5215349498&msc_qam=108000000123456&cic_qam=20165644988&ldpc_cr=10164468635");
+//                    AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConstellationDiagramIntent);
+//                    HANDLER.postDelayed(this, 5L * 1000L);
+//                }
+
                 {//向自己发送数据
                     mSendConstellationDiagramIntent.putExtra(AppConfig.KEY_RECEIVED_DATA, MessageFormat.format("scatt={0}", simulationCoordinateArr[i % simulationCoordinateArr.length]));
                     AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConstellationDiagramIntent);

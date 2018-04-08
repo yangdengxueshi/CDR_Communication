@@ -29,12 +29,14 @@ import com.dexin.cdr_communication.application.CustomApplication;
 import com.dexin.cdr_communication.entity.OperateModuleBean;
 import com.dexin.cdr_communication.utility.ApplicationUtility;
 import com.dexin.cdr_communication.utility.CalendarDateTimeUtility;
+import com.orhanobut.logger.Logger;
 import com.vondear.rxtools.RxRegTool;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -214,8 +216,8 @@ public class MainFragment extends BaseFragment {
         mTvFreqOffsetEstimationValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_FREQ_OFFSET_VALUE));
         mTvClockDeviationValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CLK_OFFSET_VALUE));
         mTvServiceDataModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MSC_QAM_VALUE));
-//        mTvBerValue
-//        mTvSubfMode
+        mTvBerValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE));
+        mTvSubfMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE));
         mTvInfoModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE));
         mTvLdpcCodeRate.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE));
     }
@@ -264,27 +266,44 @@ public class MainFragment extends BaseFragment {
                     mLastParamReceiveStr = paramReceivedStr;//更新收到的参数字符串
                     String[] lKeyValueStrArray = paramReceivedStr.split("&");
                     if (lKeyValueStrArray.length > 0) {
+
+                        Logger.t(TAG).d("onReceive: " + Arrays.toString(lKeyValueStrArray));
+
                         for (String lKeyValueStr : lKeyValueStrArray) {
                             if (lKeyValueStr.contains("=") && (!lKeyValueStr.startsWith("=") && !lKeyValueStr.endsWith("="))) {
                                 String[] lKeyValueGroup = lKeyValueStr.split("=");
                                 switch (lKeyValueGroup[0]) {
                                     case "syn_state":
-                                        mRbSyncStatus.setChecked(Objects.equals(lKeyValueGroup[1], "1"));
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_SYNC_STATE_VALUE, Objects.equals(lKeyValueGroup[1], "1"));
+                                        boolean synStateValue = Objects.equals(lKeyValueGroup[1], "1");
+                                        if (synStateValue != ApplicationUtility.getSPUtils().getBoolean(AppConfig.KEY_SYNC_STATE_VALUE)) {
+                                            mRbSyncStatus.setChecked(synStateValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_SYNC_STATE_VALUE, synStateValue);
+                                        }
                                         break;
                                     case "rf_power":
-                                        mTvRadioPower.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ_VALUE, lKeyValueGroup[1]);
+                                        String rfPowerValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(rfPowerValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_RADIO_FREQ_VALUE))) {
+                                            mTvRadioPower.setText(rfPowerValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ_VALUE, rfPowerValue);
+                                        }
                                         break;
                                     case "cnr":
-                                        mTvCnrValue.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_CNR_VALUE, lKeyValueGroup[1]);
+                                        String cnrValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(cnrValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CNR_VALUE))) {
+                                            mTvCnrValue.setText(cnrValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CNR_VALUE, cnrValue);
+                                        }
                                         break;
                                     case "mer":
-                                        mTvMerValue.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_MER_VALUE, lKeyValueGroup[1]);
+                                        String merValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(merValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MER_VALUE))) {
+                                            mTvMerValue.setText(merValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_MER_VALUE, merValue);
+                                        }
                                         break;
                                     case "freq_offset":
+
+
                                         if (RxRegTool.isMatch("^(-?\\d+)(\\.\\d+)?$", lKeyValueGroup[1])) {
                                             String freqOffsetValue = String.valueOf(Float.parseFloat(lKeyValueGroup[1]) / 1000);
                                             mTvFreqOffsetEstimationValue.setText(freqOffsetValue);
@@ -295,8 +314,11 @@ public class MainFragment extends BaseFragment {
                                         }
                                         break;
                                     case "clk_offset":
-                                        mTvClockDeviationValue.setText(lKeyValueGroup[1]);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_CLK_OFFSET_VALUE, lKeyValueGroup[1]);
+                                        String clkOffsetValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(clkOffsetValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CLK_OFFSET_VALUE))) {
+                                            mTvClockDeviationValue.setText(clkOffsetValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CLK_OFFSET_VALUE, clkOffsetValue);
+                                        }
                                         break;
                                     case "msc_qam":
                                         String mscQamValue = lKeyValueGroup[1];
@@ -332,8 +354,10 @@ public class MainFragment extends BaseFragment {
                                                 break;
                                             default:
                                         }
-                                        mTvInfoModulationMode.setText(cicQamValue);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_CIC_QAM_VALUE, cicQamValue);
+                                        if (!Objects.equals(cicQamValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE))) {
+                                            mTvInfoModulationMode.setText(cicQamValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CIC_QAM_VALUE, cicQamValue);
+                                        }
                                         break;
                                     case "ldpc_cr":
                                         String ldpcCrValue = lKeyValueGroup[1];
@@ -352,13 +376,25 @@ public class MainFragment extends BaseFragment {
                                                 break;
                                             default:
                                         }
-                                        mTvLdpcCodeRate.setText(ldpcCrValue);
-                                        ApplicationUtility.getSPUtils().put(AppConfig.KEY_LDPC_CR_VALUE, ldpcCrValue);
+                                        if (!Objects.equals(ldpcCrValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE))) {
+                                            mTvLdpcCodeRate.setText(ldpcCrValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_LDPC_CR_VALUE, ldpcCrValue);
+                                        }
+                                        break;
                                     case "BER":
-                                        mTvBerValue.setText(lKeyValueGroup[1]);
+                                        String BERValue = lKeyValueGroup[1];
+                                        Logger.t(TAG).d("onReceive: " + BERValue);
+                                        if (!Objects.equals(BERValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE))) {
+                                            mTvBerValue.setText(BERValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_BER_VALUE, BERValue);
+                                        }
                                         break;
                                     case "subf_mode"://子帧分配方式
-                                        mTvSubfMode.setText(lKeyValueGroup[1]);
+                                        String subfModeValue = lKeyValueGroup[1];
+                                        if (!Objects.equals(subfModeValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE))) {
+                                            mTvSubfMode.setText(subfModeValue);
+                                            ApplicationUtility.getSPUtils().put(AppConfig.KEY_SUBF_MODE_VALUE, subfModeValue);
+                                        }
                                         break;
                                     default:
                                 }

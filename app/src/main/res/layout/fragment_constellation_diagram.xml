@@ -13,7 +13,6 @@
         android:layout_height="0dp"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="24dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline_constellation_diagram2"
         app:layout_constraintEnd_toStartOf="@+id/guideline_constellation_diagram1"
         app:layout_constraintStart_toStartOf="parent"

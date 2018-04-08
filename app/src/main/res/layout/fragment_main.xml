@@ -54,6 +54,7 @@
         android:scrollbars="vertical"
         android:textColor="@color/colorBlack"
         android:textIsSelectable="false"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.70"/>
+        app:layout_constraintGuide_percent="0.525"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline12"
@@ -154,21 +155,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.76"/>
+        app:layout_constraintGuide_percent="0.62"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.82"/>
+        app:layout_constraintGuide_percent="0.715"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.94"/>
+        app:layout_constraintGuide_percent="0.905"/>
 
     <TextView
         android:id="@+id/tv_cnr_value"
@@ -401,7 +402,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.64"/>
+        app:layout_constraintGuide_percent="0.43"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline23"
@@ -425,7 +426,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88"/>
+        app:layout_constraintGuide_percent="0.81"/>
 
     <TextView
         android:layout_width="0dp"
