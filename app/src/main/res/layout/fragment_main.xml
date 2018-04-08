@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.43"/>
+        app:layout_constraintGuide_percent="0.435"/>
 
     <TextView
         android:id="@+id/tv_receive"
@@ -402,7 +402,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.43"/>
+        app:layout_constraintGuide_percent="0.435"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline23"
