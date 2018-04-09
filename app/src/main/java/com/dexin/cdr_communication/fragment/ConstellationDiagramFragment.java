@@ -319,6 +319,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                                 tempInt = Integer.parseInt(scattValueStr.substring(i + 2, i + 4), 16);
                                                 parseYInt = (tempInt > 128) ? (tempInt - 256) : tempInt;
                                                 if (mEntryList.size() > 100 * 100) mEntryList.remove(0);//TODO 一定要进行旧数据的移除,根据条件移除队首元素
+                                                if ((parseXInt <= -80 || parseXInt >= 80) || (parseYInt <= -80 || parseYInt >= 80)) continue;
                                                 mEntryList.add(new Entry(parseXInt, parseYInt));
                                             }
 
@@ -326,8 +327,8 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                             lScatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
                                             lScatterDataSet.setColor(ColorTemplate.COLORFUL_COLORS[0]);
                                             lScatterDataSet.setScatterShapeSize(4F);
-                                            ScatterData mScatterData = new ScatterData(lScatterDataSet);
-                                            mScConstellationDiagram.setData(mScatterData);
+                                            ScatterData lScatterData = new ScatterData(lScatterDataSet);
+                                            mScConstellationDiagram.setData(lScatterData);
                                             mScConstellationDiagram.invalidate();
                                         }
                                         break;
