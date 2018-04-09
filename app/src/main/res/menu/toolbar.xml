@@ -24,18 +24,22 @@
             app:showAsAction="never"/>
         <item
             android:id="@+id/item_pilot"
+            android:enabled="false"
             android:title="导频"
             app:showAsAction="never"/>
         <item
             android:id="@+id/item_system_info"
+            android:enabled="false"
             android:title="系统信息"
             app:showAsAction="never"/>
         <item
             android:id="@+id/item_sdis"
+            android:enabled="false"
             android:title="SDIS"
             app:showAsAction="never"/>
         <item
             android:id="@+id/item_msds"
+            android:enabled="false"
             android:title="MSDS"
             app:showAsAction="never"/>
     </group>

@@ -56,6 +56,7 @@ public class CustomApplication extends Application {
         AppConfig.initLogAdapter();
         RxTool.init(this);
         Utils.init(this);
+        com.github.mikephil.charting.utils.Utils.init(this);
     }
 
     /**

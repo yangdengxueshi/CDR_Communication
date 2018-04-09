@@ -61,7 +61,7 @@ public class ConfigParamFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity) Objects.requireNonNull(getActivity())).setToolbarTitle(R.string.config_param);
 
-        mActvRadioFreq.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_RADIO_FREQ));
+        mActvRadioFreq.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_RADIO_FREQ, "101"));
         mSTransmissionMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {//传输模式选择框
             private boolean isFirstIn = true;
 
@@ -80,7 +80,7 @@ public class ConfigParamFragment extends BaseFragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        setSpinnerItemSelectedByValue(mSTransmissionMode, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_TRANSMISSION_MODE));
+        setSpinnerItemSelectedByValue(mSTransmissionMode, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_TRANSMISSION_MODE, "1"));
         mSSpectrumMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {//频谱模式选择框
             private boolean isFirstIn = true;
 
@@ -99,7 +99,7 @@ public class ConfigParamFragment extends BaseFragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        setSpinnerItemSelectedByValue(mSSpectrumMode, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SPECTRUM_MODE));
+        setSpinnerItemSelectedByValue(mSSpectrumMode, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SPECTRUM_MODE, "1"));
     }
 
     @Override

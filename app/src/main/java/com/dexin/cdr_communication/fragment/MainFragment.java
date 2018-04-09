@@ -29,14 +29,12 @@ import com.dexin.cdr_communication.application.CustomApplication;
 import com.dexin.cdr_communication.entity.OperateModuleBean;
 import com.dexin.cdr_communication.utility.ApplicationUtility;
 import com.dexin.cdr_communication.utility.CalendarDateTimeUtility;
-import com.orhanobut.logger.Logger;
 import com.vondear.rxtools.RxRegTool;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -266,9 +264,6 @@ public class MainFragment extends BaseFragment {
                     mLastParamReceiveStr = paramReceivedStr;//更新收到的参数字符串
                     String[] lKeyValueStrArray = paramReceivedStr.split("&");
                     if (lKeyValueStrArray.length > 0) {
-
-                        Logger.t(TAG).d("onReceive: " + Arrays.toString(lKeyValueStrArray));
-
                         for (String lKeyValueStr : lKeyValueStrArray) {
                             if (lKeyValueStr.contains("=") && (!lKeyValueStr.startsWith("=") && !lKeyValueStr.endsWith("="))) {
                                 String[] lKeyValueGroup = lKeyValueStr.split("=");
@@ -281,7 +276,7 @@ public class MainFragment extends BaseFragment {
                                         }
                                         break;
                                     case "rf_power":
-                                        String rfPowerValue = lKeyValueGroup[1];
+                                        String rfPowerValue = AppConfig.rfPowerPlusTen(lKeyValueGroup[1]);
                                         if (!Objects.equals(rfPowerValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_RADIO_FREQ_VALUE))) {
                                             mTvRadioPower.setText(rfPowerValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ_VALUE, rfPowerValue);
@@ -382,8 +377,7 @@ public class MainFragment extends BaseFragment {
                                         }
                                         break;
                                     case "BER":
-                                        String BERValue = lKeyValueGroup[1];
-                                        Logger.t(TAG).d("onReceive: " + BERValue);
+                                        String BERValue = AppConfig.strToScientificNotation(lKeyValueGroup[1]);
                                         if (!Objects.equals(BERValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE))) {
                                             mTvBerValue.setText(BERValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_BER_VALUE, BERValue);

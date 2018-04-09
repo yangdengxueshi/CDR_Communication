@@ -1,13 +1,17 @@
 package com.dexin.cdr_communication.application;
 
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
 import com.dexin.cdr_communication.BuildConfig;
+import com.vondear.rxtools.RxRegTool;
 
 import org.jetbrains.annotations.Contract;
+
+import java.text.DecimalFormat;
 
 /**
  * App配置文件
@@ -71,5 +75,19 @@ public final class AppConfig {
             return !((event.getX() > left) && (event.getX() < right) && (event.getY() > top) && (event.getY() < bottom));
         }
         return false;
+    }
+
+    private static DecimalFormat mDecimalFormat = new DecimalFormat("0.0#E0");
+
+    public static String strToScientificNotation(String numStr) {
+        if (!RxRegTool.isMatch("^(-?\\d+)(\\.\\d+)?$", numStr)) return ("非法数据:" + numStr);
+        if (Double.valueOf(numStr) == 0) return "0";
+        return mDecimalFormat.format(Double.valueOf(numStr));
+    }
+
+    @NonNull
+    public static String rfPowerPlusTen(String rfPowerNum) {
+        if (!RxRegTool.isMatch("^(-?\\d+)(\\.\\d+)?$", rfPowerNum)) return ("非法数据:" + rfPowerNum);
+        return String.valueOf(Float.valueOf(rfPowerNum) + 10);
     }
 }

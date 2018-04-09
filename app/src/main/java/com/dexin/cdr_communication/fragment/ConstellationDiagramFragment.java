@@ -230,16 +230,16 @@ public class ConstellationDiagramFragment extends BaseFragment {
     TextView mTvFreqOffsetEstimationValue;
     @BindView(R.id.tv_clock_deviation_value)
     TextView mTvClockDeviationValue;
-    @BindView(R.id.tv_service_data_modulation_mode)
-    TextView mTvServiceDataModulationMode;
     @BindView(R.id.tv_ber_value)
     TextView mTvBerValue;
-    @BindView(R.id.tv_subf_mode)
-    TextView mTvSubfMode;
-    @BindView(R.id.tv_info_modulation_mode)
-    TextView mTvInfoModulationMode;
-    @BindView(R.id.tv_ldpc_code_rate)
-    TextView mTvLdpcCodeRate;
+//    @BindView(R.id.tv_service_data_modulation_mode)
+//    TextView mTvServiceDataModulationMode;
+//    @BindView(R.id.tv_subf_mode)
+//    TextView mTvSubfMode;
+//    @BindView(R.id.tv_info_modulation_mode)
+//    TextView mTvInfoModulationMode;
+//    @BindView(R.id.tv_ldpc_code_rate)
+//    TextView mTvLdpcCodeRate;
 
     private void loadCacheValueInOnActivityCreated() {
         mRbSyncStatus.setChecked(ApplicationUtility.getSPUtils().getBoolean(AppConfig.KEY_SYNC_STATE_VALUE));
@@ -248,11 +248,11 @@ public class ConstellationDiagramFragment extends BaseFragment {
         mTvMerValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MER_VALUE));
         mTvFreqOffsetEstimationValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_FREQ_OFFSET_VALUE));
         mTvClockDeviationValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CLK_OFFSET_VALUE));
-        mTvServiceDataModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MSC_QAM_VALUE));
         mTvBerValue.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE));
-        mTvSubfMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE));
-        mTvInfoModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE));
-        mTvLdpcCodeRate.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE));
+//        mTvServiceDataModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MSC_QAM_VALUE));
+//        mTvSubfMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE));
+//        mTvInfoModulationMode.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE));
+//        mTvLdpcCodeRate.setText(ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE));
     }
 
     private LocalReceiver mLocalReceiver;
@@ -265,11 +265,11 @@ public class ConstellationDiagramFragment extends BaseFragment {
             mTvMerValue.setSelected(true);
             mTvFreqOffsetEstimationValue.setSelected(true);
             mTvClockDeviationValue.setSelected(true);
-            mTvServiceDataModulationMode.setSelected(true);
             mTvBerValue.setSelected(true);
-            mTvSubfMode.setSelected(true);
-            mTvInfoModulationMode.setSelected(true);
-            mTvLdpcCodeRate.setSelected(true);
+//            mTvServiceDataModulationMode.setSelected(true);
+//            mTvSubfMode.setSelected(true);
+//            mTvInfoModulationMode.setSelected(true);
+//            mTvLdpcCodeRate.setSelected(true);
         }
 
         mLocalReceiver = new LocalReceiver();
@@ -340,7 +340,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                         }
                                         break;
                                     case "rf_power":
-                                        String rfPowerValue = lKeyValueGroup[1];
+                                        String rfPowerValue = AppConfig.rfPowerPlusTen(lKeyValueGroup[1]);
                                         if (!Objects.equals(rfPowerValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_RADIO_FREQ_VALUE))) {
                                             mTvRadioPower.setText(rfPowerValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ_VALUE, rfPowerValue);
@@ -395,7 +395,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                                 mscQamValue = " 4-QAM";
                                         }
                                         if (!Objects.equals(mscQamValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_MSC_QAM_VALUE, " 4-QAM"))) {
-                                            mTvServiceDataModulationMode.setText(mscQamValue);
+//                                            mTvServiceDataModulationMode.setText(mscQamValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_MSC_QAM_VALUE, mscQamValue);
                                             dynamicAdjustLimitLine();
                                         }
@@ -415,7 +415,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                             default:
                                         }
                                         if (!Objects.equals(cicQamValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CIC_QAM_VALUE))) {
-                                            mTvInfoModulationMode.setText(cicQamValue);
+//                                            mTvInfoModulationMode.setText(cicQamValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_CIC_QAM_VALUE, cicQamValue);
                                         }
                                         break;
@@ -437,12 +437,12 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                             default:
                                         }
                                         if (!Objects.equals(ldpcCrValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_LDPC_CR_VALUE))) {
-                                            mTvLdpcCodeRate.setText(ldpcCrValue);
+//                                            mTvLdpcCodeRate.setText(ldpcCrValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_LDPC_CR_VALUE, ldpcCrValue);
                                         }
                                         break;
                                     case "BER":
-                                        String BERValue = lKeyValueGroup[1];
+                                        String BERValue = AppConfig.strToScientificNotation(lKeyValueGroup[1]);
                                         if (!Objects.equals(BERValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_BER_VALUE))) {
                                             mTvBerValue.setText(BERValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_BER_VALUE, BERValue);
@@ -451,7 +451,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
                                     case "subf_mode"://子帧分配方式:
                                         String subfModeValue = lKeyValueGroup[1];
                                         if (!Objects.equals(subfModeValue, ApplicationUtility.getSPUtils().getString(AppConfig.KEY_SUBF_MODE_VALUE))) {
-                                            mTvSubfMode.setText(subfModeValue);
+//                                            mTvSubfMode.setText(subfModeValue);
                                             ApplicationUtility.getSPUtils().put(AppConfig.KEY_SUBF_MODE_VALUE, subfModeValue);
                                         }
                                         break;
