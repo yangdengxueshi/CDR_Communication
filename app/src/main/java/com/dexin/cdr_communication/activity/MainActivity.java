@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -32,6 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
+
+    @NonNull
+    public static Intent createIntent(Context context) {
+        return new Intent(context, MainActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +205,7 @@ public class MainActivity extends BaseActivity {
     private class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!AppConfig.isComponentAlive(MainActivity.this)) return;
             switch (Objects.requireNonNull(intent.getAction())) {
                 case AppConfig.ACTION_SHOW_PING_DIALOG:
                     if (mRxDialogLoading == null) mRxDialogLoading = new RxDialogLoading(MainActivity.this);

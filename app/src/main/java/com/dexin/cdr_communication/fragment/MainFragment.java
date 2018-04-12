@@ -254,7 +254,7 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent == null) return;
+            if (intent == null || !AppConfig.isComponentAlive(MainFragment.this)) return;
             switch (Objects.requireNonNull(intent.getAction())) {
                 case AppConfig.ACTION_SHOW_RECEIVED_PARAM://TODO 显示接收到的数据
                     mTvReceive.setText(MessageFormat.format("{0}\n{1}", CalendarDateTimeUtility.getSpecialDateFormat(new Date(), 0, "yyyy年MM月dd日 HH:mm:ss "), intent.getStringExtra(AppConfig.KEY_RECEIVED_DATA)));

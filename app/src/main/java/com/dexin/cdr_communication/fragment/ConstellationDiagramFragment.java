@@ -290,7 +290,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent == null) return;  // 10,000 * 1 K
+            if (intent == null || !AppConfig.isComponentAlive(ConstellationDiagramFragment.this)) return;  // 10,000 * 1 K
             switch (Objects.requireNonNull(intent.getAction())) {
                 case AppConfig.ACTION_SHOW_RECEIVED_PARAM://TODO 显示接收到的数据:
                     String paramReceivedStr = intent.getStringExtra(AppConfig.KEY_RECEIVED_DATA);

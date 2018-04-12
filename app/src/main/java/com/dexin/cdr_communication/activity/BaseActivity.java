@@ -2,6 +2,8 @@ package com.dexin.cdr_communication.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +16,11 @@ import com.dexin.cdr_communication.application.AppConfig;
  */
 @SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
+    @NonNull
+    public static Intent createIntent(Context context) {
+        return new Intent(context, BaseActivity.class);
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try {

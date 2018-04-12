@@ -1,6 +1,10 @@
 package com.dexin.cdr_communication.application;
 
+import android.app.Activity;
+import android.app.Application;
+import android.app.Service;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +62,27 @@ public final class AppConfig {
     public static final String KEY_BER_VALUE = "KEY_BER_VALUE";
     public static final String KEY_SUBF_MODE_VALUE = "KEY_SUBF_MODE_VALUE";
 
+    /**
+     * 判断组件状态是否 活跃      //FIXME 还可以考虑使用“多态”来进行封装（待续）
+     *
+     * @return 组件状态
+     */
+    public static boolean isComponentAlive(Object component) {
+        if (component instanceof Application) {
+            Application application = (Application) component;
+            return !application.isRestricted();
+        } else if (component instanceof Activity) {
+            Activity activity = (Activity) component;
+            return !activity.isFinishing() && !activity.isDestroyed() && !activity.isRestricted();
+        } else if (component instanceof Fragment) {
+            Fragment fragment = (Fragment) component;
+            return !fragment.isHidden() && !fragment.isRemoving() && !fragment.isDetached();
+        } else if (component instanceof Service) {
+            Service service = (Service) component;
+            return !service.isRestricted();
+        }
+        return false;
+    }
 
     /**
      * 根据 EditText 所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘
