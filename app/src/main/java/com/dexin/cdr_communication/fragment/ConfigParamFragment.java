@@ -169,8 +169,7 @@ public class ConfigParamFragment extends BaseFragment {
             String lJointSpectrumMode = TextUtils.isEmpty(lSpectrumMode) ? "" : MessageFormat.format("&freq_mode={0}", lSpectrumMode);
 
             String lJointConfigParamsStr = MessageFormat.format("{0}{1}{2}\n", lJointRadioFreq, lJointTransmissionMode, lJointSpectrumMode).substring(1);
-            mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, lJointConfigParamsStr);
-            AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent);
+            AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, lJointConfigParamsStr));
             RxToast.info("命令已发送");
 
             ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ, lRadioFreq);

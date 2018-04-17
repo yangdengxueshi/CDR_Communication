@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
     //------------------------------------------------------------TODO MD(质感设计)----------------------------------------------------------------------------
     //---------------------------------------------------------------------↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓----------------------------------------------------------------
     private final Intent mConnectToCDRServerIntent = new Intent(AppConfig.ACTION_CONNECT_TO_CDR_SERVER);//FIXME 被用来发送广播
-    private final Intent mSendConfigParamIntent = new Intent(AppConfig.ACTION_SEND_CONFIG_PARAM);
+    private final Intent mSendConfigParamIntent = new Intent(AppConfig.ACTION_SEND_CONFIG_PARAM);//FIXME 发送配置参数Intent
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -124,9 +124,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void sendCmdToSetConstellationDiagramOutputMode(String constellationDiagramOutputMode) {
-        mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, MessageFormat.format("scatt_type={0}\n", constellationDiagramOutputMode));//麻点图类型(星座图)
-        AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent);
-
+        AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, MessageFormat.format("scatt_type={0}\n", constellationDiagramOutputMode)));//麻点图类型(星座图)
         ApplicationUtility.getSPUtils().put(AppConfig.KEY_CONSTELLATION_DIAGRAM_OUTPUT_MODE, constellationDiagramOutputMode);
     }
 
@@ -215,6 +213,7 @@ public class MainActivity extends BaseActivity {
                 case AppConfig.ACTION_CANCEL_PING_DIALOG:
                     if (mRxDialogLoading != null) {
                         boolean pingSuccess = intent.getBooleanExtra(AppConfig.KEY_PING_STATUS, false);
+                        if (pingSuccess) AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, "getParam\n"));//ping成功了才发送get请求
                         mRxDialogLoading.cancel((pingSuccess ? RxDialogLoading.RxCancelType.success : RxDialogLoading.RxCancelType.error), (pingSuccess ? "连接服务器成功!" : "连接服务器失败!"));
                     }
                     break;

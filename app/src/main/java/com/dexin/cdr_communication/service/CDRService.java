@@ -221,19 +221,21 @@ public class CDRService extends BaseService {
     private class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {//广播接收器
-            switch (Objects.requireNonNull(intent.getAction())) {
-                case AppConfig.ACTION_CONNECT_TO_CDR_SERVER:
-                    connectToCDRServer();
-                    break;
-                case AppConfig.ACTION_SEND_CONFIG_PARAM://TODO 向网络写入数据: intent.getStringExtra(AppConfig.KEY_CONFIG_PARAM)
-                    Message lMessage = new Message();
-                    lMessage.what = HANDLE_SEND_MESSAGE;
-                    lMessage.obj = intent.getStringExtra(AppConfig.KEY_CONFIG_PARAM);
-                    if ((mClientRunnable != null) && (mClientRunnable.mSendHandler != null)) {
-                        mClientRunnable.mSendHandler.sendMessage(lMessage);
-                    }
-                    break;
-                default:
+            if (AppConfig.isComponentAlive(CDRService.this)) {
+                switch (Objects.requireNonNull(intent.getAction())) {
+                    case AppConfig.ACTION_CONNECT_TO_CDR_SERVER:
+                        connectToCDRServer();
+                        break;
+                    case AppConfig.ACTION_SEND_CONFIG_PARAM://TODO 向网络写入数据: intent.getStringExtra(AppConfig.KEY_CONFIG_PARAM)
+                        Message lMessage = new Message();
+                        lMessage.what = HANDLE_SEND_MESSAGE;
+                        lMessage.obj = intent.getStringExtra(AppConfig.KEY_CONFIG_PARAM);
+                        if ((mClientRunnable != null) && (mClientRunnable.mSendHandler != null)) {
+                            mClientRunnable.mSendHandler.sendMessage(lMessage);
+                        }
+                        break;
+                    default:
+                }
             }
         }
     }
