@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -25,6 +27,7 @@ import com.vondear.rxtools.RxNetTool;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogLoading;
 
+import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
 import java.util.Objects;
 
@@ -52,6 +55,7 @@ public class MainActivity extends BaseActivity {
         releaseMDFrameInOnDestroy();
         releaseLocalReceiverInOnDestroy();
         releaseBindServiceResourceInOnDestroy();
+        releaseCustomHandlerResourcesInOnDestroy();
         super.onDestroy();
     }
 
@@ -208,7 +212,9 @@ public class MainActivity extends BaseActivity {
                 case AppConfig.ACTION_CANCEL_PING_DIALOG:
                     if (mRxDialogLoading != null) {
                         boolean pingSuccess = intent.getBooleanExtra(AppConfig.KEY_PING_STATUS, false);
-                        if (pingSuccess) AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, "getParam\n"));//ping成功了才发送get请求
+                        if (pingSuccess) {//ping成功了才发送get请求
+                            mCustomHandler.postDelayed(() -> AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, "getParam\n")), 1000);
+                        }
                         mRxDialogLoading.cancel((pingSuccess ? RxDialogLoading.RxCancelType.success : RxDialogLoading.RxCancelType.error), (pingSuccess ? "连接服务器成功!" : "连接服务器失败!"));
                     }
                     break;
@@ -273,6 +279,36 @@ public class MainActivity extends BaseActivity {
             TIME_BACK_PRESSED = System.currentTimeMillis();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------TODO 自定义Handler,防止内存泄漏------------------------------------------------------
+    //---------------------------------------------------------------------↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓--------------------------------------------------------------------
+    private final CustomHandler mCustomHandler = new CustomHandler(MainActivity.this);//书上声明为final
+
+    private void releaseCustomHandlerResourcesInOnDestroy() {
+        mCustomHandler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * 自定义Handler,防止延时消息导致内存泄漏
+     */
+    private static final class CustomHandler extends Handler {
+        private final WeakReference<MainActivity> mCurActivityWeakReference;
+
+        CustomHandler(MainActivity curActivity) {
+            mCurActivityWeakReference = new WeakReference<>(curActivity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity curActivity = mCurActivityWeakReference.get();
+            if (curActivity != null) {// + 判断curActivity的成员变量是否为 null
+                switch (msg.what) {//TODO 执行消息业务逻辑
+                    default:
+                }
+            }
         }
     }
 }

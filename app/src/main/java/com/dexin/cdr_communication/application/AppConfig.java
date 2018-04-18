@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.dexin.cdr_communication.BuildConfig;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.vondear.rxtools.RxRegTool;
 
 import org.jetbrains.annotations.Contract;
@@ -26,7 +28,7 @@ public final class AppConfig {
     public static final boolean IS_TRUE_ENVIRONMENT = true;
 
     public static void initLogAdapter() {
-//        Logger.addLogAdapter(new AndroidLogAdapter());//不是正式环境才初始化日志打印器
+        Logger.addLogAdapter(new AndroidLogAdapter());//不是正式环境才初始化日志打印器
     }
 
     public static final String mHost = IS_TRUE_ENVIRONMENT ? "192.168.8.108" : "10.0.2.2";

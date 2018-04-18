@@ -63,7 +63,7 @@ public class ConstellationDiagramFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity) Objects.requireNonNull(getActivity())).setToolbarTitle(R.string.constellation_diagram);
-        loadCacheValueInOnActivityCreated();
+//        loadCacheValueInOnActivityCreated();
         {
             mScConstellationDiagram.setTouchEnabled(false);//设置是否可以触摸
             mScConstellationDiagram.setDragEnabled(false);//设置可以拖拽

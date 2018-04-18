@@ -198,24 +198,20 @@ public class CDRService extends BaseService {
     //---------------------------------------------------------------------↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓--------------------------------------------------------------------
     private static final int HANDLE_SEND_MESSAGE = 22;
     private LocalReceiver mLocalReceiver;
-    private IntentFilter mIntentFilterOne;
-    private IntentFilter mIntentFilterTwo;
+    private IntentFilter mIntentFilter;
 
     private void initLocalReceiverResourceInOnBind() {
         mLocalReceiver = new LocalReceiver();
-
-        mIntentFilterOne = new IntentFilter(AppConfig.ACTION_CONNECT_TO_CDR_SERVER);
-        AppConfig.LOCAL_BROADCAST_MANAGER.registerReceiver(mLocalReceiver, mIntentFilterOne);
-
-        mIntentFilterTwo = new IntentFilter(AppConfig.ACTION_SEND_CONFIG_PARAM);
-        AppConfig.LOCAL_BROADCAST_MANAGER.registerReceiver(mLocalReceiver, mIntentFilterTwo);
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(AppConfig.ACTION_CONNECT_TO_CDR_SERVER);
+        mIntentFilter.addAction(AppConfig.ACTION_SEND_CONFIG_PARAM);
+        AppConfig.LOCAL_BROADCAST_MANAGER.registerReceiver(mLocalReceiver, mIntentFilter);
     }
 
     private void releaseLocalReceiverResourceInOnDestroy() {
         AppConfig.LOCAL_BROADCAST_MANAGER.unregisterReceiver(mLocalReceiver);
         mLocalReceiver = null;
-        mIntentFilterOne = null;
-        mIntentFilterTwo = null;
+        mIntentFilter = null;
     }
 
     private class LocalReceiver extends BroadcastReceiver {
@@ -300,6 +296,7 @@ public class CDRService extends BaseService {
                         try {
                             String content;
                             while (mSubThreadRunOn && ((content = mBufferedReader.readLine()) != null)) {
+                                Logger.t(TAG).d("接收到的服务端数据AAAAAAAAAAAAAAAAA:" + content);
                                 AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mShowReceivedParamIntent.putExtra(AppConfig.KEY_RECEIVED_DATA, content));
                             }
                         } catch (Exception e) {

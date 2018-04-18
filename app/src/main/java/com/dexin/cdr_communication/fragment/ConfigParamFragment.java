@@ -22,6 +22,8 @@ import com.orhanobut.logger.Logger;
 import com.vondear.rxtools.RxNetTool;
 import com.vondear.rxtools.view.RxToast;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.MessageFormat;
 import java.util.Objects;
 
@@ -130,7 +132,7 @@ public class ConfigParamFragment extends BaseFragment {
      * @param spinner Spinner对象
      * @param value   值
      */
-    private static void setSpinnerItemSelectedByValue(Spinner spinner, String value) {
+    private static void setSpinnerItemSelectedByValue(@NotNull Spinner spinner, String value) {
         SpinnerAdapter lSpinnerAdapter = spinner.getAdapter();//得到SpinnerAdapter对象
         int lCount = lSpinnerAdapter.getCount();
         for (int i = 0; i < lCount; i++) {
@@ -148,35 +150,40 @@ public class ConfigParamFragment extends BaseFragment {
     String mPleaseSelectStr;
     private final Intent mSendConfigParamIntent = new Intent(AppConfig.ACTION_SEND_CONFIG_PARAM);
 
-    @OnClick(R.id.btn_send_msg)
-    public void onViewClicked() {
-        try {
-            if (AppConfig.IS_TRUE_ENVIRONMENT && !RxNetTool.isWifiConnected(CustomApplication.getContext())) {
-                RxToast.warning(AppConfig.TOAST_PLEASE_CONNECT_TO_CDR_WIFI_FIRST);
-                return;
-            }
-            String lRadioFreq = mActvRadioFreq.getText().toString();
-            if (!TextUtils.isEmpty(lRadioFreq) && ((Float.valueOf(lRadioFreq) < 50.0) || (Float.valueOf(lRadioFreq) > 180.0))) {
-                RxToast.info("请输入 正确范围 的\n射频频率 (50.0~180.0)");
-                return;
-            }
-            String lJointRadioFreq = TextUtils.isEmpty(lRadioFreq) ? "" : MessageFormat.format("&RF={0}", lRadioFreq);
+    @OnClick({R.id.btn_send_msg})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_send_msg:
+                try {
+                    if (AppConfig.IS_TRUE_ENVIRONMENT && !RxNetTool.isWifiConnected(CustomApplication.getContext())) {
+                        RxToast.warning(AppConfig.TOAST_PLEASE_CONNECT_TO_CDR_WIFI_FIRST);
+                        return;
+                    }
+                    String lRadioFreq = mActvRadioFreq.getText().toString();
+                    if (!TextUtils.isEmpty(lRadioFreq) && ((Float.valueOf(lRadioFreq) < 50.0) || (Float.valueOf(lRadioFreq) > 180.0))) {
+                        RxToast.info("请输入 正确范围 的\n射频频率 (50.0~180.0)");
+                        return;
+                    }
+                    String lJointRadioFreq = TextUtils.isEmpty(lRadioFreq) ? "" : MessageFormat.format("&RF={0}", lRadioFreq);
 
-            String lTransmissionMode = (Objects.equals(mSTransmissionMode.getSelectedItem().toString(), mPleaseSelectStr) ? "" : mSTransmissionMode.getSelectedItem().toString());
-            String lJointTransmissionMode = TextUtils.isEmpty(lTransmissionMode) ? "" : MessageFormat.format("&trans_mode={0}", lTransmissionMode);
+                    String lTransmissionMode = (Objects.equals(mSTransmissionMode.getSelectedItem().toString(), mPleaseSelectStr) ? "" : mSTransmissionMode.getSelectedItem().toString());
+                    String lJointTransmissionMode = TextUtils.isEmpty(lTransmissionMode) ? "" : MessageFormat.format("&trans_mode={0}", lTransmissionMode);
 
-            String lSpectrumMode = (Objects.equals(mSSpectrumMode.getSelectedItem().toString(), mPleaseSelectStr) ? "" : mSSpectrumMode.getSelectedItem().toString());
-            String lJointSpectrumMode = TextUtils.isEmpty(lSpectrumMode) ? "" : MessageFormat.format("&freq_mode={0}", lSpectrumMode);
+                    String lSpectrumMode = (Objects.equals(mSSpectrumMode.getSelectedItem().toString(), mPleaseSelectStr) ? "" : mSSpectrumMode.getSelectedItem().toString());
+                    String lJointSpectrumMode = TextUtils.isEmpty(lSpectrumMode) ? "" : MessageFormat.format("&freq_mode={0}", lSpectrumMode);
 
-            String lJointConfigParamsStr = MessageFormat.format("{0}{1}{2}\n", lJointRadioFreq, lJointTransmissionMode, lJointSpectrumMode).substring(1);
-            AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, lJointConfigParamsStr));
-            RxToast.info("命令已发送");
+                    String lJointConfigParamsStr = MessageFormat.format("{0}{1}{2}\n", lJointRadioFreq, lJointTransmissionMode, lJointSpectrumMode).substring(1);
+                    AppConfig.LOCAL_BROADCAST_MANAGER.sendBroadcast(mSendConfigParamIntent.putExtra(AppConfig.KEY_CONFIG_PARAM, lJointConfigParamsStr));
+                    RxToast.info("命令已发送");
 
-            ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ, lRadioFreq);
-            ApplicationUtility.getSPUtils().put(AppConfig.KEY_TRANSMISSION_MODE, lTransmissionMode);
-            ApplicationUtility.getSPUtils().put(AppConfig.KEY_SPECTRUM_MODE, lSpectrumMode);
-        } catch (Exception e) {
-            Logger.t(TAG).e(e, "onViewClicked: ");
+                    ApplicationUtility.getSPUtils().put(AppConfig.KEY_RADIO_FREQ, lRadioFreq);
+                    ApplicationUtility.getSPUtils().put(AppConfig.KEY_TRANSMISSION_MODE, lTransmissionMode);
+                    ApplicationUtility.getSPUtils().put(AppConfig.KEY_SPECTRUM_MODE, lSpectrumMode);
+                } catch (Exception e) {
+                    Logger.t(TAG).e(e, "onViewClicked: ");
+                }
+                break;
+            default:
         }
     }
 }

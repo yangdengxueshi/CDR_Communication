@@ -73,7 +73,7 @@ public class MainFragment extends BaseFragment {
 
         initOperateModuleInOnCreate();
 
-        loadCacheValueInOnActivityCreated();
+//        loadCacheValueInOnActivityCreated();
         initLocalReceiverInOnActivityCreated();
     }
 
@@ -294,8 +294,6 @@ public class MainFragment extends BaseFragment {
                                         }
                                         break;
                                     case "freq_offset":
-
-
                                         if (RxRegTool.isMatch("^(-?\\d+)(\\.\\d+)?$", lKeyValueGroup[1])) {
                                             String freqOffsetValue = String.valueOf(Float.parseFloat(lKeyValueGroup[1]) / 1000);
                                             mTvFreqOffsetEstimationValue.setText(freqOffsetValue);
