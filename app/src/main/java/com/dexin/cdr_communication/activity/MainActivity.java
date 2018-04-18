@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -33,11 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
-
-    @NonNull
-    public static Intent createIntent(Context context) {
-        return new Intent(context, MainActivity.class);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +128,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.item_connect).setVisible(ApplicationUtility.getSPUtils().getBoolean(AppConfig.KEY_CONNECT_MENU_VISIABLE));
         menu.setGroupVisible(R.id.group_constellation_diagram_type, ApplicationUtility.getSPUtils().getBoolean(AppConfig.KEY_CONSTELLATION_DIAGRAM_TYPE_MENU_VISIABLE));
         switch (ApplicationUtility.getSPUtils().getString(AppConfig.KEY_CONSTELLATION_DIAGRAM_OUTPUT_MODE)) {
             case "0":

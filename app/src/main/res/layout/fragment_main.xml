@@ -45,21 +45,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.435"/>
 
-    <TextView
-        android:id="@+id/tv_receive"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/cornsilk"
-        android:hint="接收显示区 "
-        android:scrollbars="vertical"
-        android:textColor="@color/colorBlack"
-        android:textIsSelectable="false"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/guideline22"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline10"/>
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline11"
         android:layout_width="wrap_content"

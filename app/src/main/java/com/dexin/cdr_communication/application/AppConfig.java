@@ -19,6 +19,8 @@ import java.text.DecimalFormat;
 
 /**
  * App配置文件
+ * <p>
+ * 1.更新版本号     2.配置为真实环境       3.将日志关闭         4.确认输入框是否引起崩溃
  */
 public final class AppConfig {
     public static final boolean IS_TRUE_ENVIRONMENT = true;
@@ -44,6 +46,7 @@ public final class AppConfig {
     public static final String ACTION_CONNECT_TO_CDR_SERVER = BuildConfig.APPLICATION_ID + "_ACTION_CONNECT_TO_CDR_SERVER";//显示接收到的参数
 
     // SP_KEY
+    public static final String KEY_CONNECT_MENU_VISIABLE = "KEY_CONNECT_MENU_VISIABLE";
     public static final String KEY_CONSTELLATION_DIAGRAM_TYPE_MENU_VISIABLE = "KEY_CONSTELLATION_DIAGRAM_TYPE_MENU_VISIABLE";
     public static final String KEY_MAIN_FRAGMENT_VISIBILITY = "KEY_MAIN_FRAGMENT_VISIBILITY";
     public static final String KEY_RADIO_FREQ = "KEY_RADIO_FREQ";

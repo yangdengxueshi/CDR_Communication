@@ -11,7 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +27,11 @@ import com.dexin.cdr_communication.application.AppConfig;
 import com.dexin.cdr_communication.application.CustomApplication;
 import com.dexin.cdr_communication.entity.OperateModuleBean;
 import com.dexin.cdr_communication.utility.ApplicationUtility;
-import com.dexin.cdr_communication.utility.CalendarDateTimeUtility;
 import com.vondear.rxtools.RxRegTool;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,6 +63,7 @@ public class MainFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         ((MainActivity) Objects.requireNonNull(getActivity())).setToolbarTitle(R.string.app_name);
         {//重新绘制menu
+            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CONNECT_MENU_VISIABLE, true);
             ApplicationUtility.getSPUtils().put(AppConfig.KEY_CONSTELLATION_DIAGRAM_TYPE_MENU_VISIABLE, false);
             getActivity().invalidateOptionsMenu();
         }
@@ -89,6 +86,11 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
+        {//重新绘制menu
+            ApplicationUtility.getSPUtils().put(AppConfig.KEY_CONNECT_MENU_VISIABLE, false);
+            Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+        }
+
         ApplicationUtility.getSPUtils().put(AppConfig.KEY_MAIN_FRAGMENT_VISIBILITY, false);
         unbinder.unbind();
         super.onDestroyView();
@@ -164,7 +166,7 @@ public class MainFragment extends BaseFragment {
                 case 0://FIXME 参数设置
                     ((MainActivity) Objects.requireNonNull(getActivity())).loadFragment(ConfigParamFragment.newInstance(), true);
                     break;
-                case 1:
+                case 1://FIXME 星座图
                     ((MainActivity) Objects.requireNonNull(getActivity())).loadFragment(ConstellationDiagramFragment.newInstance(), true);
                 {//重新绘制menu
                     ApplicationUtility.getSPUtils().put(AppConfig.KEY_CONSTELLATION_DIAGRAM_TYPE_MENU_VISIABLE, true);
@@ -181,8 +183,6 @@ public class MainFragment extends BaseFragment {
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------TODO 本地广播模块--------------------------------------------------------------------
     //---------------------------------------------------------------------↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓--------------------------------------------------------------------
-    @BindView(R.id.tv_receive)
-    TextView mTvReceive;
     @BindView(R.id.rb_sync_status)
     RadioButton mRbSyncStatus;
     @BindView(R.id.tv_radio_power)
@@ -225,7 +225,6 @@ public class MainFragment extends BaseFragment {
 
     private void initLocalReceiverInOnActivityCreated() {
         {
-            mTvReceive.setMovementMethod(new ScrollingMovementMethod());
             mTvRadioPower.setSelected(true);
             mTvCnrValue.setSelected(true);
             mTvMerValue.setSelected(true);
@@ -257,8 +256,6 @@ public class MainFragment extends BaseFragment {
             if (intent == null || !AppConfig.isComponentAlive(MainFragment.this)) return;
             switch (Objects.requireNonNull(intent.getAction())) {
                 case AppConfig.ACTION_SHOW_RECEIVED_PARAM://TODO 显示接收到的数据
-                    mTvReceive.setText(MessageFormat.format("{0}\n{1}", CalendarDateTimeUtility.getSpecialDateFormat(new Date(), 0, "yyyy年MM月dd日 HH:mm:ss "), intent.getStringExtra(AppConfig.KEY_RECEIVED_DATA)));
-
                     String paramReceivedStr = intent.getStringExtra(AppConfig.KEY_RECEIVED_DATA);
                     if (TextUtils.isEmpty(paramReceivedStr) || !paramReceivedStr.contains("=") || Objects.equals(mLastParamReceiveStr, paramReceivedStr)) break;
                     mLastParamReceiveStr = paramReceivedStr;//更新收到的参数字符串

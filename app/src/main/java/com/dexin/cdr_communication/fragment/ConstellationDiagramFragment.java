@@ -163,11 +163,9 @@ public class ConstellationDiagramFragment extends BaseFragment {
             ApplicationUtility.getSPUtils().put(AppConfig.KEY_CONSTELLATION_DIAGRAM_TYPE_MENU_VISIABLE, false);
             getActivity().invalidateOptionsMenu();
         }
-        super.onDestroyView();
-        if (mScConstellationDiagram != null) {
-            mScConstellationDiagram.invalidate();
-        }
+        if (mScConstellationDiagram != null) mScConstellationDiagram.invalidate();
         unbinder.unbind();
+        super.onDestroyView();
     }
 
     private void dynamicAdjustLimitLine() {//动态调整“限制线”
